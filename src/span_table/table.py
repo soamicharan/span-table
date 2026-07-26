@@ -1,16 +1,16 @@
 from rich import box as rich_box
 from rich.text import Text
 
-from src.span_table.span import (
+from span_table.span import (
     extend_span, 
     check_span, 
     convert_cells_to_spans, 
     get_output_column_widths,
     get_output_row_heights,
 )
-from src.span_table.cell import make_cell, merge_all_cells
-from src.span_table.markup_text import MarkupText
-from src.span_table.types import SpanType, TableType
+from span_table.cell import make_cell, merge_all_cells
+from span_table.markup_text import MarkupText
+from span_table.types import SpanType, TableType
 from typing import Annotated
 
 TableMarkupType = Annotated[list[list[MarkupText]], 'Lists of list of markup type objects']

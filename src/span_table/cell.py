@@ -1,4 +1,4 @@
-from src.span_table.span import (
+from span_table.span import (
     get_span_column_count,
     get_span_row_count, 
     get_span_char_height, 
@@ -7,7 +7,7 @@ from src.span_table.span import (
 from typing import Literal
 from dataclasses import dataclass
 from rich.box import Box
-from src.span_table.types import SpanType, TableType
+from span_table.types import SpanType, TableType
 
 @dataclass
 class Cell:

@@ -1,6 +1,6 @@
 from rich.text import Text
-from src.span_table.types import TableType, SpanType
-from src.span_table.markup_text import MarkupText
+from span_table.types import TableType, SpanType
+from span_table.markup_text import MarkupText
 
 def check_span(data: TableType, span: SpanType):
     if not len(span) == 2 or not len(span[0]) == 2 or not len(span[1]) == 2:
