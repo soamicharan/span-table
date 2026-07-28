@@ -73,7 +73,7 @@ spans = [
     ((0, 3), (0, 4))
 ]
 
-print(span_table(table, spans))
+print(span_table(table, spans, border_style="red"))
 ```
 
 This renders:
@@ -90,13 +90,14 @@ This renders:
 
 ## API
 
-### `span_table(data, spans, box=rich_box.SQUARE) -> str`
+### `span_table(data, spans, box=rich_box.SQUARE, border_style=str | Style) -> str`
 
 Render a text table with optional merged cells.
 
 - `data`: `list[list[str]]` — table rows and columns
 - `spans`: `list[tuple[tuple[int, int], tuple[int, int]]]` — list of merge regions
 - `box`: `rich.box.Box` — optional Rich box style such as `box.SQUARE`
+- `border_style`: `str` or `rich.style.Style` - optional style for borders
 
 ### Span rules
 
@@ -107,7 +108,7 @@ Render a text table with optional merged cells.
 
 ## Rich markup support
 
-Cell values may include Rich markup tags such as `[bold]`, `[italic]`, or color tags but does not support emoji yet. The library preserves markup while measuring text layout.
+Cell values may include Rich markup tags such as `[bold]`, `[italic]`, or color tags. The library preserves markup while measuring text layout.
 
 ## Notes
 
