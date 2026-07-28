@@ -1,6 +1,4 @@
-from rich.text import Text
 from span_table.types import TableType, SpanType
-from span_table.markup_text import MarkupText
 
 def check_span(data: TableType, span: SpanType):
     if not len(span) == 2 or not len(span[0]) == 2 or not len(span[1]) == 2:
@@ -46,10 +44,8 @@ def get_span_column_count(span: SpanType) -> int:
 def get_span_row_count(span: SpanType) -> int:
     return max((span[-1][0] - span[0][0]) + 1, 1)
 
-def get_longest_line_length(text: MarkupText) -> int:
-    return len(max(text.plain.split("\n"), key=lambda line: len(line)))
 
-def get_output_column_widths(table: TableType, spans: list[SpanType]) -> list[int]:
+def get_column_widths(table: TableType, cell_map,  spans: list[SpanType]) -> list[int]:
     widths = [3 for _ in range(len(table[0]))]
     for row in range(len(table)):
         for column in range(len(table[row])):
@@ -57,8 +53,8 @@ def get_output_column_widths(table: TableType, spans: list[SpanType]) -> list[in
             column_count = get_span_column_count(span)
             text_row = span[0][0]
             text_column = span[0][1]
-            text = table[text_row][text_column]
-            length = get_longest_line_length(text)
+            text_cell = cell_map.get((text_row, text_column))
+            length = text_cell.width
             if column_count == 1:
                 widths[column] = max(length, widths[column])
             else:
@@ -72,29 +68,29 @@ def get_output_column_widths(table: TableType, spans: list[SpanType]) -> list[in
                             break
     return widths
 
-def get_output_row_heights(table: TableType, spans: list[SpanType]) -> list[int]:
+def get_row_heights(table: TableType, cell_map, spans: list[SpanType]) -> list[int]:
     heights = [-1 for _ in table]
     for row in range(len(table)):
         for column in range(len(table[row])):
-            text = table[row][column]
+            text_cell = cell_map.get((row, column))
             span = get_span(spans, row, column)
             row_count = get_span_row_count(span)
-            height = len(text.plain.split('\n'))
+            height = text_cell.height
             if row_count == 1:
                 heights[row] = max(height, heights[row])
     
     for row in range(len(table)):
         for column in range(len(table[row])):
-            text = table[row][column]
+            text_cell = cell_map.get((row, column))
             span = get_span(spans, row, column)
             row_count = get_span_row_count(span)
-            height = len(text.plain.split('\n'))
+            height = text_cell.height
             if row_count > 1:
                 text_row = span[0][0]
                 text_column = span[0][1]
                 end_row = text_row + row_count
-                text = table[text_row][text_column]
-                height = len(text.plain.split('\n')) - (row_count - 1)
+                text_cell = cell_map.get((text_row, text_column))
+                height = text_cell.height - (row_count - 1)
                 add_row = 0
                 while height > sum(heights[text_row:end_row]):
                     heights[text_row + add_row] += 1
@@ -102,27 +98,4 @@ def get_output_row_heights(table: TableType, spans: list[SpanType]) -> list[int]
                         add_row += 1
                     else:
                         add_row = 0
-    return heights
-
-def get_span_char_width(span: SpanType, column_widths: list[int]) -> int:
-    start_column = span[0][1]
-    column_count = get_span_column_count(span)
-    total_width = 0
-
-    for i in range(start_column, start_column + column_count):
-        total_width += column_widths[i]
-
-    total_width += column_count - 1
-
-    return total_width
-
-def get_span_char_height(span: SpanType, row_heights: list[int]) -> int:
-    start_row = span[0][0]
-    row_count = get_span_row_count(span)
-    total_height = 0
-
-    for i in range(start_row, start_row + row_count):
-        total_height += row_heights[i]
-    
-    total_height += row_count - 1
-    return total_height
+    return [max(1, i) for i in heights]

@@ -1,6 +1,6 @@
 [project]
 name = "span-table"
-version = "0.2.0"
+version = "0.4.0"
 description = "span-table is a lightweight Python helper for rendering ASCII tables with merged cells using Rich-style markup."
 readme = "README.md"
 requires-python = ">=3.9"
@@ -31,3 +31,8 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/span_table"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.2",
+]
